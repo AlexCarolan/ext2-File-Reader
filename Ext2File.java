@@ -1,8 +1,10 @@
+import java.io.RandomAccessFile;
 public class Ext2File
 {
 	private Volume volume;
 	private long curentPosition;
 	
+	//Constructor for the class
 	public Ext2File(Volume vol)
 	{
 		volume = vol;
@@ -14,7 +16,8 @@ public class Ext2File
 		byte[] byteArray = new byte[(int) length];
 		try
 		{
-			volume.getFile().read(byteArray, (int) startByte, (int) length);
+			volume.getFile().seek(startByte);
+			volume.getFile().read(byteArray, 0, (int) length);
 			return(byteArray);
 		}catch(Exception e){
 			System.out.println(e);
@@ -27,7 +30,8 @@ public class Ext2File
 		byte[] byteArray = new byte[(int) length];
 		try
 		{
-			volume.getFile().read(byteArray, (int) curentPosition, (int) length);
+			volume.getFile().seek(curentPosition);
+			volume.getFile().read(byteArray, 0, (int) length);
 			return(byteArray);
 		}catch(Exception e){
 			System.out.println(e);
