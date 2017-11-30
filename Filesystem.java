@@ -17,14 +17,13 @@ public class Filesystem
 			vol = new Volume(unixStr);
 		}
 		
+		Ext2File file = new Ext2File(vol);
+		
+		SuperBlock mainBlock = new SuperBlock(file, 1024);
 		
 		
-		Ext2File file = new  Ext2File(vol);
+
 		
-		
-		byte buf[] = file.read(2048, 1000);
-		
-		helper.dumpHexBytes(buf);
 		
 	}
 }
