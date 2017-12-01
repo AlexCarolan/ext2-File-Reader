@@ -45,7 +45,7 @@ public class SuperBlock
 	
 	public void printSuperBlock()
 	{	
-		System.out.println("------------------ " + new String(name.array()) + " ------------------");
+		System.out.println("------------------ SuperBlock: " + new String(name.array()) + " ------------------");
 		System.out.println("Total Number of Inodes: " + inodes.getInt());
 		System.out.println("Total Number of Inodes per Group: " + inodesPerGroup.getInt());
 		System.out.println("Total Number of Blocks: " + blocks.getInt());
