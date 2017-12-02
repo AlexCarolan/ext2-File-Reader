@@ -3,13 +3,14 @@ import java.nio.ByteOrder;
 public class SuperBlock
 {
 	private Ext2File file;
+	private ByteBuffer byteBuff;
 	private int offset;
-	private ByteBuffer inodes;
-	private ByteBuffer blocks;
-	private ByteBuffer name;
-	private ByteBuffer blocksPerGroup;
-	private ByteBuffer inodesPerGroup;
-	private ByteBuffer inodeSize;
+	private int inodes;
+	private int blocks;
+	private String name;
+	private int blocksPerGroup;
+	private int inodesPerGroup;
+	private int inodeSize;
 	
 	public SuperBlock(Ext2File f, int o)
 	{
@@ -17,39 +18,56 @@ public class SuperBlock
 		offset = o;
 		
 		byte buffer[] = file.read(offset, 4);
-		inodes = ByteBuffer.wrap(buffer);
-		inodes.order(ByteOrder.LITTLE_ENDIAN);
+		byteBuff = ByteBuffer.wrap(buffer);
+		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
+		inodes = byteBuff.getInt();
 		
 		buffer = file.read(offset+4, 4);
-		blocks = ByteBuffer.wrap(buffer);
-		blocks.order(ByteOrder.LITTLE_ENDIAN);
+		byteBuff = ByteBuffer.wrap(buffer);
+		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
+		blocks = byteBuff.getInt();
 		
 		buffer = file.read(offset+120, 16);
-		name = ByteBuffer.wrap(buffer);
-		name.order(ByteOrder.LITTLE_ENDIAN);
+		byteBuff = ByteBuffer.wrap(buffer);
+		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
+		name = new String(byteBuff.array());
 		
 		buffer = file.read(offset+32, 4);
-		blocksPerGroup = ByteBuffer.wrap(buffer);
-		blocksPerGroup.order(ByteOrder.LITTLE_ENDIAN);
+		byteBuff = ByteBuffer.wrap(buffer);
+		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
+		blocksPerGroup = byteBuff.getInt();
 		
 		buffer = file.read(offset+40, 4);
-		inodesPerGroup = ByteBuffer.wrap(buffer);
-		inodesPerGroup.order(ByteOrder.LITTLE_ENDIAN);
+		byteBuff = ByteBuffer.wrap(buffer);
+		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
+		inodesPerGroup = byteBuff.getInt();
 		
 		buffer = file.read(offset+88, 4);
-		inodeSize = ByteBuffer.wrap(buffer);
-		inodeSize.order(ByteOrder.LITTLE_ENDIAN);
+		byteBuff = ByteBuffer.wrap(buffer);
+		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
+		inodeSize = byteBuff.getInt();
 		
 		this.printSuperBlock();
 	}
 	
 	public void printSuperBlock()
 	{	
-		System.out.println("------------------ SuperBlock: " + new String(name.array()) + " ------------------");
-		System.out.println("Total Number of Inodes: " + inodes.getInt());
-		System.out.println("Total Number of Inodes per Group: " + inodesPerGroup.getInt());
-		System.out.println("Total Number of Blocks: " + blocks.getInt());
-		System.out.println("Total Number of Blocks per Group: " + blocksPerGroup.getInt());
-		System.out.println("Inode Size: " + inodeSize.getInt() + " Bytes");	
+		System.out.println("------------------ SuperBlock: " + name + " ------------------");
+		System.out.println("Total Number of Inodes: " + inodes);
+		System.out.println("Total Number of Inodes per Group: " + inodesPerGroup);
+		System.out.println("Total Number of Blocks: " + blocks);
+		System.out.println("Total Number of Blocks per Group: " + blocksPerGroup);
+		System.out.println("Inode Size: " + inodeSize + " Bytes");	
 	}
+	
+	public int getInodesize()
+	{
+		return (inodeSize);
+	}
+	
+	public int getNumberOfInodes()
+	{
+		return (inodes);
+	}
+	
 }
