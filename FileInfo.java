@@ -7,13 +7,14 @@ public class FileInfo
 	private Ext2File file;
 	private int offset;
 	private ByteBuffer byteBuff;
+	private byte padding = 0x00;
 	private int fileMode;
 	private int userID;
 	private int fileSizeLower;
-	private long lastAcessTime;
-	private long creationTime;
-	private long lastModifiedTime;
-	private long deletedTime;
+	private int lastAcessTime;
+	private int creationTime;
+	private int lastModifiedTime;
+	private int deletedTime;
 	private int groupID;
 	private int hardLinks;
 	private long blockPointers;
@@ -21,6 +22,7 @@ public class FileInfo
 	private int doubleIndirectPointer;
 	private int tripleIndirectPointer;
 	private int fileSizeUpper;
+	
 	
 	HashMap<Integer, String> monthMap = new HashMap<Integer, String>();
 
@@ -44,13 +46,17 @@ public class FileInfo
 		monthMap.put(10, "November");
 		monthMap.put(11, "December");
 		
+		//use paddedArray to fill the 4 byte requirment of getInt()
 		byte buffer[] = file.read(offset, 2);
-		byteBuff = ByteBuffer.wrap(buffer);
+		byte paddedArray[] = {0,0,0,0};
+		System.arraycopy(buffer, 0, paddedArray, 0, 2);
+		byteBuff = ByteBuffer.wrap(paddedArray);
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
 		fileMode = byteBuff.getInt();
 		
 		buffer = file.read(offset+2, 2);
-		byteBuff = ByteBuffer.wrap(buffer);
+		System.arraycopy(buffer, 0, paddedArray, 0, 2);
+		byteBuff = ByteBuffer.wrap(paddedArray);
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
 		userID = byteBuff.getInt();
 		
@@ -62,30 +68,32 @@ public class FileInfo
 		buffer = file.read(offset+8, 4);
 		byteBuff = ByteBuffer.wrap(buffer);
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
-		lastAcessTime = byteBuff.getLong();
+		lastAcessTime = byteBuff.getInt();
 		
 		buffer = file.read(offset+12, 4);
 		byteBuff = ByteBuffer.wrap(buffer);
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
-		creationTime = byteBuff.getLong();
+		creationTime = byteBuff.getInt();;
 		
 		buffer = file.read(offset+16, 4);
 		byteBuff = ByteBuffer.wrap(buffer);
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
-		lastModifiedTime = byteBuff.getLong();
+		lastModifiedTime = byteBuff.getInt();;
 		
 		buffer = file.read(offset+20, 4);
 		byteBuff = ByteBuffer.wrap(buffer);
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
-		deletedTime = byteBuff.getLong();
+		deletedTime = byteBuff.getInt();;
 		
 		buffer = file.read(offset+24, 2);
-		byteBuff = ByteBuffer.wrap(buffer);
+		System.arraycopy(buffer, 0, paddedArray, 0, 2);
+		byteBuff = ByteBuffer.wrap(paddedArray);
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
 		groupID = byteBuff.getInt();
 		
 		buffer = file.read(offset+26, 2);
-		byteBuff = ByteBuffer.wrap(buffer);
+		System.arraycopy(buffer, 0, paddedArray, 0, 2);
+		byteBuff = ByteBuffer.wrap(paddedArray);
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
 		hardLinks = byteBuff.getInt();
 		
@@ -113,6 +121,8 @@ public class FileInfo
 		byteBuff = ByteBuffer.wrap(buffer);
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
 		fileSizeUpper = byteBuff.getInt();
+		
+		this.printFileInfo();
 
 	}
 
@@ -125,7 +135,7 @@ public class FileInfo
 		} 
 		else if(((fileMode) & 0x4000) == 0x4000)
 		{
-			System.out.print("b"); //Directory
+			System.out.print("d"); //Directory
 		}
 		
 		//User Permissions
@@ -194,18 +204,21 @@ public class FileInfo
 			System.out.print("- ");
 		}
 		
-		System.out.print(hardLinks);
+		System.out.print(hardLinks + " ");
 		System.out.print(userID + " ");
 		System.out.print(groupID + " ");
 		long fileSize = (fileSizeLower) + (fileSizeUpper << 32);
 		System.out.print(fileSize + " ");
 		
-		Date lastModified = new Date(lastModifiedTime);
+		long lastModifiedMillSec = lastModifiedTime * 1000;
+		
+		Date lastModified = new Date(lastModifiedMillSec);
 		
 		System.out.print(monthMap.get(lastModified.getMonth())); //Month
 		System.out.print(" " + lastModified.getDate() + " "); //Day
 		System.out.print(lastModified.getHours() + ":" + lastModified.getMinutes()); //Time
 		
+		System.out.print("\n");//Name
 		
 		
 	}
