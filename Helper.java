@@ -1,6 +1,16 @@
+/**
+* This class provides a hex and coresponding char output from a provided byte array.
+* This class is intended for troubleshooting and byte content verification by developers and is not used by the main program.
+*/
 public class Helper
 {	
-	//Prints out the contents as a byte array in the format of hex and chars
+	/**
+	* Outputs the provided byte array as a set of hex values and chars.
+	* Output is in the format (bytes 0-7(hex) | 8-15(hex) | 0-7(char) | 8-15(char)).
+	* Each row conatins 16 bytes worth of data and an X denotes that the array end has been reached.
+	*
+	* @param bytes The byte array to be output.
+	*/
 	public void dumpHexBytes(byte[] bytes)
 	{
 		int offset = 0;

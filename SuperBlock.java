@@ -1,5 +1,10 @@
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+
+/**
+* This class contains the SuperBlock data
+* The superblock contains information relating to blocks and inodes.
+*/
 public class SuperBlock
 {
 	private Ext2File file;
@@ -17,6 +22,7 @@ public class SuperBlock
 		file = f;
 		offset = o;
 		
+		//Seperate and store each value byte by byte
 		byte buffer[] = file.read(offset, 4);
 		byteBuff = ByteBuffer.wrap(buffer);
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
@@ -50,6 +56,11 @@ public class SuperBlock
 		this.printSuperBlock();
 	}
 	
+	/**
+	* Provides the size of each inode.
+	* 
+	* @return The size in bytes of each inode.
+	*/
 	public void printSuperBlock()
 	{	
 		System.out.println("------------------ SuperBlock: " + name + " ------------------");
@@ -60,14 +71,24 @@ public class SuperBlock
 		System.out.println("Inode Size: " + inodeSize + " Bytes");	
 	}
 	
+	/**
+	* Provides the size of each inode.
+	* 
+	* @return The size in bytes of each inode.
+	*/
 	public int getInodesize()
 	{
 		return (inodeSize);
 	}
 	
+	/**
+	* provides the total number of inodes per group.
+	* 
+	* @return The size in bytes of each inode.
+	*/
 	public int getNumberOfInodes()
 	{
-		return (inodes);
+		return (inodesPerGroup);
 	}
 	
 }

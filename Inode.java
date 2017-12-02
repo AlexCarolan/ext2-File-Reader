@@ -2,6 +2,10 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Date;
 import java.util.HashMap;
+
+/**
+* This class contains the data for a single inode.
+*/
 public class Inode
 {
 	private Ext2File file;
@@ -25,7 +29,13 @@ public class Inode
 	private HashMap<Integer, String> monthMap = new HashMap<Integer, String>();
 
 	
-	
+	/**
+	* Creates a new Inode from the specified position (offset).
+	* Inode data is broken down byte by byte and seperated into individual values.
+	* 
+	* @param f The Ext2 Filesystem.
+	* @param o The position (in bytes) at which the inode table begins in the filesystem.
+	*/
 	public Inode (Ext2File f, int o)
 	{
 		file = f;
@@ -122,7 +132,11 @@ public class Inode
 		fileSizeUpper = byteBuff.getInt();
 
 	}
-
+	
+	/**
+	* Prints out the contents of the inode in unix directory listing format.
+	* (Note this does not include the file name as it resides in the directory lisitng seperate form the inode)
+	*/
 	public void printInode()
 	{
 		//File Type
@@ -201,8 +215,10 @@ public class Inode
 			System.out.print("- ");
 		}
 		
+		//Hard Links
 		System.out.print(hardLinks + " ");
 		
+		//User ID
 		if (userID == 0)
 		{
 			System.out.print("root ");
@@ -210,6 +226,7 @@ public class Inode
 			System.out.print(userID + " ");
 		}
 		
+		//Group ID
 		if (groupID == 0)
 		{
 			System.out.print("root ");
@@ -223,12 +240,10 @@ public class Inode
 		
 		Date lastModified = new Date(lastModifiedMillSec);
 		
-		System.out.print(lastModified.getYear() + 1900 + " "); //Month
+		System.out.print(lastModified.getYear() + 1900 + " "); //Year
 		System.out.print(monthMap.get(lastModified.getMonth())); //Month
 		System.out.print(" " + lastModified.getDate() + " "); //Day
 		System.out.print(lastModified.getHours() + ":" + lastModified.getMinutes()); //Time
-		
-		System.out.print("\n");
 		
 		
 	}
