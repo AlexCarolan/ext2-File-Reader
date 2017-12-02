@@ -8,7 +8,7 @@ public class Directory
 		file = f;
 		info = new FileInfo[inodes];
 		
-		for(int i = 0; i < 30;  i++)
+		for(int i = 0; i < inodes;  i++)
 		{
 			info[i] = new FileInfo(file, offset);
 			offset = offset + length;

@@ -22,9 +22,7 @@ public class FileInfo
 	private int doubleIndirectPointer;
 	private int tripleIndirectPointer;
 	private int fileSizeUpper;
-	
-	
-	HashMap<Integer, String> monthMap = new HashMap<Integer, String>();
+	private HashMap<Integer, String> monthMap = new HashMap<Integer, String>();
 
 	
 	
@@ -33,6 +31,7 @@ public class FileInfo
 		file = f;
 		offset = o;
 		
+		//Initialize the hashmap for integers(0-11) -> months
 		monthMap.put(0, "January");
 		monthMap.put(1, "Febuary");
 		monthMap.put(2, "March");
@@ -83,7 +82,7 @@ public class FileInfo
 		buffer = file.read(offset+20, 4);
 		byteBuff = ByteBuffer.wrap(buffer);
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
-		deletedTime = byteBuff.getInt();;
+		deletedTime = byteBuff.getInt();
 		
 		buffer = file.read(offset+24, 2);
 		System.arraycopy(buffer, 0, paddedArray, 0, 2);
@@ -121,8 +120,6 @@ public class FileInfo
 		byteBuff = ByteBuffer.wrap(buffer);
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
 		fileSizeUpper = byteBuff.getInt();
-		
-		this.printFileInfo();
 
 	}
 
@@ -205,20 +202,33 @@ public class FileInfo
 		}
 		
 		System.out.print(hardLinks + " ");
-		System.out.print(userID + " ");
-		System.out.print(groupID + " ");
+		
+		if (userID == 0)
+		{
+			System.out.print("root ");
+		}else{
+			System.out.print(userID + " ");
+		}
+		
+		if (groupID == 0)
+		{
+			System.out.print("root ");
+		}else{
+			System.out.print(groupID + " ");
+		}
 		long fileSize = (fileSizeLower) + (fileSizeUpper << 32);
 		System.out.print(fileSize + " ");
 		
-		long lastModifiedMillSec = lastModifiedTime * 1000;
+		long lastModifiedMillSec = lastModifiedTime * 1000L;
 		
 		Date lastModified = new Date(lastModifiedMillSec);
 		
+		System.out.print(lastModified.getYear() + 1900 + " "); //Month
 		System.out.print(monthMap.get(lastModified.getMonth())); //Month
 		System.out.print(" " + lastModified.getDate() + " "); //Day
 		System.out.print(lastModified.getHours() + ":" + lastModified.getMinutes()); //Time
 		
-		System.out.print("\n");//Name
+		System.out.print("\n");
 		
 		
 	}

@@ -1,5 +1,6 @@
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Scanner;
 public class Filesystem
 {
 	public static void main(String[] args)
@@ -34,11 +35,29 @@ public class Filesystem
 		
 		int inodeTableStart = indodeBlock*1024;
 		
-		buffer = file.read(inodeTableStart, 1000);
+		Directory dir = new Directory(file, superBlock.getInodesize(), superBlock.getNumberOfInodes(), inodeTableStart);
 		
+		FileInfo[] inodes = dir.getFileInfo();
+		
+		Scanner reader = new Scanner(System.in);
+		
+		int inodeNumber = 0;
+		
+		buffer = file.read(inodeTableStart+128+16, 4);
 		helper.dumpHexBytes(buffer);
 		
-		Directory dir = new Directory(file, superBlock.getInodesize(), superBlock.getNumberOfInodes(), inodeTableStart);
+		//Check inode values
+		System.out.println("Enter the number of the inode you wish to access(or 0 to exit): ");
+		inodeNumber = reader.nextInt();
+		
+		while(inodeNumber != 0)
+		{
+			System.out.println("------------------------------------------------------------------\n");
+			inodes[inodeNumber-1].printFileInfo();
+			System.out.println("\n------------------------------------------------------------------");
+			System.out.println("Enter the number of the inode you wish to access(or 0 to exit): ");
+			inodeNumber = reader.nextInt();
+		}
 		
 		
 		
