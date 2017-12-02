@@ -35,9 +35,9 @@ public class Filesystem
 		
 		int inodeTableStart = indodeBlock*1024;
 		
-		Directory dir = new Directory(file, superBlock.getInodesize(), superBlock.getNumberOfInodes(), inodeTableStart);
+		InodeTable inodeTable = new InodeTable(file, superBlock.getInodesize(), superBlock.getNumberOfInodes(), inodeTableStart);
 		
-		FileInfo[] inodes = dir.getFileInfo();
+		Inode[] inodes = inodeTable.getInodeTable();
 		
 		Scanner reader = new Scanner(System.in);
 		
@@ -53,7 +53,7 @@ public class Filesystem
 		while(inodeNumber != 0)
 		{
 			System.out.println("------------------------------------------------------------------\n");
-			inodes[inodeNumber-1].printFileInfo();
+			inodes[inodeNumber-1].printInode();
 			System.out.println("\n------------------------------------------------------------------");
 			System.out.println("Enter the number of the inode you wish to access(or 0 to exit): ");
 			inodeNumber = reader.nextInt();
