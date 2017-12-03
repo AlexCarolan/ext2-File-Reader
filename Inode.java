@@ -21,7 +21,7 @@ public class Inode
 	private int deletedTime;
 	private int groupID;
 	private int hardLinks;
-	private long blockPointers;
+	private int[] blockPointers;
 	private int indirectPointer;
 	private int doubleIndirectPointer;
 	private int tripleIndirectPointer;
@@ -106,10 +106,14 @@ public class Inode
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
 		hardLinks = byteBuff.getInt();
 		
-		buffer = file.read(offset+40, 48);
-		byteBuff = ByteBuffer.wrap(buffer);
-		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
-		blockPointers = byteBuff.getLong();
+		blockPointers = new int[12];
+		for(int i=0; i <12; i++)
+		{
+			buffer = file.read(offset+40+(i*4), 4);
+			byteBuff = ByteBuffer.wrap(buffer);
+			byteBuff.order(ByteOrder.LITTLE_ENDIAN);
+			blockPointers[i] = byteBuff.getInt();
+		}
 
 		buffer = file.read(offset+88, 4);
 		byteBuff = ByteBuffer.wrap(buffer);
@@ -219,20 +223,11 @@ public class Inode
 		System.out.print(hardLinks + " ");
 		
 		//User ID
-		if (userID == 0)
-		{
-			System.out.print("root ");
-		}else{
-			System.out.print(userID + " ");
-		}
+		System.out.print(userID + " ");
 		
 		//Group ID
-		if (groupID == 0)
-		{
-			System.out.print("root ");
-		}else{
-			System.out.print(groupID + " ");
-		}
+		System.out.print(groupID + " ");
+	
 		long fileSize = (fileSizeLower) + (fileSizeUpper << 32);
 		System.out.print(fileSize + " ");
 		
