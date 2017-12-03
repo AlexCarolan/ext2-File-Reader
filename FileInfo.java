@@ -59,5 +59,10 @@ public class FileInfo
 	{
 		System.out.print(fileName);
 	}
+	
+	public int getFileLength()
+	{
+		return length;
+	}
 
 }
