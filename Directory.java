@@ -25,7 +25,7 @@ public class Directory
 			{
 				break;
 			}
-
+			
 			while(offset < (1024*(i+1)))
 			{
 				tempFile = new FileInfo(file, ((offset)+(inodes.getInodeBlockPointer(dirInode ,i)*1024)));
@@ -35,8 +35,6 @@ public class Directory
 			
 			offset = 0;
 			totalPos = totalPos + 1024;
-			
-			
 		}
 		
 		info = new FileInfo[directoryEntries.size()];
@@ -46,9 +44,10 @@ public class Directory
 		{
 			inodes.printInode(info[i].getInode());
 			info[i].printFileName();
-			System.out.print("\n");
 		}
-
+		
+		System.out.println("------------------------------------------------------------------");
+		
 	}
 	
 	public FileInfo[] getFileInfo()

@@ -71,7 +71,7 @@ public class FileInfo
 
 	public void printFileName()
 	{
-		System.out.print(fileName);
+		System.out.println(fileName);
 	}
 	
 	public int getFileLength()

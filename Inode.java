@@ -1,4 +1,4 @@
-package com.ksmpartners.utility;
+
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -220,30 +220,32 @@ public class Inode
 		
 		if((fileMode & 0x0001) == 0x0001)
 		{
-			System.out.print("x ");
+			System.out.print("x\t");
 		}else{
-			System.out.print("- ");
+			System.out.print("-\t");
 		}
 		
-		//Hard Links
-		System.out.print(hardLinks + " ");
-		
-		//User ID
-		System.out.print(userID + " ");
-		
-		//Group ID
-		System.out.print(groupID + " ");
-	
-		System.out.print(fileSize + " ");
+		//Hard Links, User-ID, Group-ID
+		System.out.printf("%-2d %-5d %-5d %-10d", hardLinks, userID, groupID, fileSize);
 		
 		long lastModifiedMillSec = lastModifiedTime * 1000L;
-		
 		Date lastModified = new Date(lastModifiedMillSec);
 		
-		System.out.print(lastModified.getYear() + 1900 + " "); //Year
-		System.out.print(monthMap.get(lastModified.getMonth())); //Month
-		System.out.print(" " + lastModified.getDate() + " "); //Day
-		System.out.print(lastModified.getHours() + ":" + lastModified.getMinutes() + " "); //Time
+		System.out.printf("%-4d %-9s %-3d", (lastModified.getYear() + 1900), (monthMap.get(lastModified.getMonth())), (lastModified.getDate()));
+		
+		if(lastModified.getHours() < 10)//Hours
+		{
+		System.out.print("0" + lastModified.getHours() + ":");
+		}else{
+		System.out.print(lastModified.getHours() + ":");
+		}
+		
+		if(lastModified.getMinutes() < 10)//Minutes
+		{
+			System.out.print("0" + lastModified.getMinutes() + " ");
+		}else{
+			System.out.print(lastModified.getMinutes() + " ");
+		}
 	}
 	
 	public int getBlockPointer(int blockNum)

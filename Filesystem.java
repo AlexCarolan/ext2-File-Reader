@@ -42,6 +42,7 @@ public class Filesystem
 		
 		Inode[] inodes = inodeTable.getInodeTable();
 		
+		
 		//Check inode values for debugging
 
 		
