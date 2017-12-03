@@ -1,3 +1,5 @@
+package com.ksmpartners.utility;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Date;
@@ -26,6 +28,7 @@ public class Inode
 	private int doubleIndirectPointer;
 	private int tripleIndirectPointer;
 	private int fileSizeUpper;
+	private long fileSize;
 	private HashMap<Integer, String> monthMap = new HashMap<Integer, String>();
 
 	
@@ -134,6 +137,9 @@ public class Inode
 		byteBuff = ByteBuffer.wrap(buffer);
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
 		fileSizeUpper = byteBuff.getInt();
+		
+		//Calculate the file size by combing the lower and upper values
+		fileSize = (fileSizeLower) + (fileSizeUpper << 32);
 
 	}
 	
@@ -228,7 +234,6 @@ public class Inode
 		//Group ID
 		System.out.print(groupID + " ");
 	
-		long fileSize = (fileSizeLower) + (fileSizeUpper << 32);
 		System.out.print(fileSize + " ");
 		
 		long lastModifiedMillSec = lastModifiedTime * 1000L;
@@ -238,8 +243,25 @@ public class Inode
 		System.out.print(lastModified.getYear() + 1900 + " "); //Year
 		System.out.print(monthMap.get(lastModified.getMonth())); //Month
 		System.out.print(" " + lastModified.getDate() + " "); //Day
-		System.out.print(lastModified.getHours() + ":" + lastModified.getMinutes()); //Time
-		
+		System.out.print(lastModified.getHours() + ":" + lastModified.getMinutes() + " "); //Time
+	}
+	
+	public int getBlockPointer(int blockNum)
+	{
+		return blockPointers[blockNum];
+	}
+	
+	public long getLength()
+	{
+		return fileSize;
+	}
+	
+	public void printBlockPointers()
+	{
+		for(int i=0; i<12; i++)
+		{
+			System.out.println(blockPointers[i]);
+		}
 		
 	}
 

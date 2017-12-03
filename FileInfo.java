@@ -54,6 +54,20 @@ public class FileInfo
 		fileName = new String(byteBuff.array());
 		
 	}
+	
+	public void printFileInfo()
+	{
+		System.out.println("Inode Number: " + inodeNumber);
+		System.out.println("length: " + length);
+		System.out.println("Name Length: " + nameLength);
+		System.out.println("File Type: " + fileType);
+		System.out.println("File Name: " + fileName);
+	}
+	
+	public int getInode()
+	{
+		return inodeNumber;
+	}
 
 	public void printFileName()
 	{

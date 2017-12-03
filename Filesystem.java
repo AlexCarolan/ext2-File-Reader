@@ -35,18 +35,22 @@ public class Filesystem
 		
 		int inodeTableStart = indodeBlock*1024;
 		
+
+		
 		InodeTable inodeTable = new InodeTable(file, superBlock.getInodesize(), superBlock.getNumberOfInodes(), inodeTableStart);
+		Directory rootDirectory = new Directory(file, inodeTable, 2);
 		
 		Inode[] inodes = inodeTable.getInodeTable();
 		
-		Scanner reader = new Scanner(System.in);
+		//Check inode values for debugging
+
 		
+		Scanner reader = new Scanner(System.in);
 		int inodeNumber = 0;
 		
 		buffer = file.read(inodeTableStart+128+16, 4);
 		helper.dumpHexBytes(buffer);
 		
-		//Check inode values
 		System.out.println("Enter the number of the inode you wish to access(or 0 to exit): ");
 		inodeNumber = reader.nextInt();
 		

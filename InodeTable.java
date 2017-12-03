@@ -35,6 +35,22 @@ public class InodeTable
 	*/
 	public Inode[] getInodeTable()
 	{
-		return (inodes);
+		return inodes;
 	}
+	
+	public void printInode(int inodeNum)
+	{
+		inodes[inodeNum-1].printInode();
+	}
+	
+	public long getInodeLength(int inodeNum)
+	{
+		return inodes[inodeNum-1].getLength();
+	}
+	
+	public int getInodeBlockPointer(int inodeNum, int blockNum)
+	{
+		return inodes[inodeNum-1].getBlockPointer(blockNum);
+	}
+	
 }
