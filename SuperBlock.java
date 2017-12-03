@@ -88,7 +88,7 @@ public class SuperBlock
 	*/
 	public int getNumberOfInodes()
 	{
-		return (inodesPerGroup);
+		return (inodes);
 	}
 	
 }
