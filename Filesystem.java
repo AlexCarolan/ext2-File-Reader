@@ -53,36 +53,39 @@ public class Filesystem
 		//System.out.println("\n------------------------------------------------------------------");
 		int i;
 		
-		while(true)
+		while(!input.equals("exit"))
 		{
-			System.out.print("Enter the name of the file or directory you wish to access: ");
+			System.out.print("Enter the name of the file or directory you wish to access or \"exit\" to quit: ");
 			input = reader.nextLine();
 			
 			for(i=0; i<directoryEntries.length; i++)
 			{
-				if(directoryEntries[i].getFileName().trim().equals(input))
+				if(directoryEntries[i].getFileName().equals(input))
 				{
 					if(directoryEntries[i].getFileType() == 1)
 					{
+						System.out.println("------------------------------------------------------------------");
 						regularFile = new File(file, inodes[(directoryEntries[i].getInode()-1)]);
+						System.out.println("------------------------------------------------------------------");
 						break;
 					}
 					else if(directoryEntries[i].getFileType() == 2)
 					{
+						System.out.println("------------------------------------------------------------------");
 						directory = new Directory(file, inodeTable, (directoryEntries[i].getInode()));
 						break;
 					}
 				}
 			}
 			
-			if(i >= directoryEntries.length)
+			if(i >= directoryEntries.length && !input.equals("exit"))
 			{
 				System.out.println("The specified file/directory could not be found");
 			}
-		
-		
-
+			
 		}
+		
+		System.out.println("You have chosen to exit the filesystem reader, goodbye!");
 		
 		
 

@@ -52,6 +52,7 @@ public class FileInfo
 		byteBuff = ByteBuffer.wrap(buffer);
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
 		fileName = new String(byteBuff.array());
+		fileName = fileName.trim();
 	}
 	
 	public void printFileInfo()
@@ -80,7 +81,7 @@ public class FileInfo
 
 	public void printFileName()
 	{
-		System.out.println(fileName.trim());
+		System.out.println(fileName);
 	}
 	
 	public int getFileLength()
