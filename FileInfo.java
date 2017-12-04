@@ -52,7 +52,6 @@ public class FileInfo
 		byteBuff = ByteBuffer.wrap(buffer);
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
 		fileName = new String(byteBuff.array());
-		
 	}
 	
 	public void printFileInfo()
@@ -68,10 +67,20 @@ public class FileInfo
 	{
 		return inodeNumber;
 	}
+	
+	public int getFileType()
+	{
+		return fileType;
+	}
+	
+	public String getFileName()
+	{
+		return fileName;
+	}
 
 	public void printFileName()
 	{
-		System.out.println(fileName);
+		System.out.println(fileName.trim());
 	}
 	
 	public int getFileLength()
