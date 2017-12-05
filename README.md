@@ -1,7 +1,7 @@
 # ext2-File-Reader
 A java program to read and interpret the contents of an ext2 filesystem
 
-#Commands
+# Commands
 
 exit - ends the program
 
