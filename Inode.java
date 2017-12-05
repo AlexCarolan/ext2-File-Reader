@@ -228,7 +228,7 @@ public class Inode
 		//Hard Links, User-ID, Group-ID
 		System.out.printf("%-2d %-5d %-5d %-10d", hardLinks, userID, groupID, fileSize);
 		
-		long lastModifiedMillSec = lastModifiedTime * 1000L;
+		long lastModifiedMillSec = (long)lastModifiedTime * 1000L;
 		Date lastModified = new Date(lastModifiedMillSec);
 		
 		System.out.printf("%-4d %-9s %-3d", (lastModified.getYear() + 1900), (monthMap.get(lastModified.getMonth())), (lastModified.getDate()));

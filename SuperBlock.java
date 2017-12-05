@@ -82,13 +82,28 @@ public class SuperBlock
 	}
 	
 	/**
-	* provides the total number of inodes per group.
+	* provides the total number of inodes.
 	* 
 	* @return The size in bytes of each inode.
 	*/
 	public int getNumberOfInodes()
 	{
 		return (inodes);
+	}
+	
+	/**
+	* provides the total number of inodes per group.
+	* 
+	* @return The size in bytes of each inode.
+	*/
+	public int getInodesPerGroup()
+	{
+		return (inodesPerGroup);
+	}
+	
+	public int getBlocksPerGroup()
+	{
+		return (blocksPerGroup);
 	}
 	
 }

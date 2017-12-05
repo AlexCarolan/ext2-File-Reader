@@ -61,7 +61,7 @@ public class FileInfo
 		System.out.println("length: " + length);
 		System.out.println("Name Length: " + nameLength);
 		System.out.println("File Type: " + fileType);
-		System.out.println("File Name: " + fileName);
+		System.out.println("File Name: " + fileName + "\n");
 	}
 	
 	public int getInode()

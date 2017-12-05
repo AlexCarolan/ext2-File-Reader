@@ -1,3 +1,6 @@
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
 /**
 * This class creates an array of inodes when provided with an Ext2 file and data from the superblock.
 */
@@ -10,20 +13,54 @@ public class InodeTable
 	* Creates a new InodeTable 
 	* 
 	* @param f The Ext2 Filesystem.
-	* @param length The length in bytes of each inode.
-	* @param inodesNum The total number of inodes in the table.
-	* @param offset The position (in bytes) at which the inode table begins in the filesystem.
+	* @param superBlock The superblock for the filesystem
 	*/
-	public InodeTable(Ext2File f, int length, int inodesNum, int offset)
+	public InodeTable(Ext2File f, SuperBlock superBlock)
 	{
 		file = f;
-		inodes = new Inode[inodesNum];
+		inodes = new Inode[superBlock.getNumberOfInodes()];
 		
+		int wholeBlocks = superBlock.getNumberOfInodes()/superBlock.getInodesPerGroup();
+		int remainder = superBlock.getNumberOfInodes()%superBlock.getInodesPerGroup();
+		int inodesPerGroup = superBlock.getInodesPerGroup();
+		int inodeLength = superBlock.getInodesize();
+		
+		int j;
+		int indodeBlock;
+		byte buffer[];
+		int offset;
+		
+		//Find the pointer for the inode table 
 		//Create an array of inodes
-		for(int i = 0; i < inodesNum;  i++)
+		
+		for(j=0; j<wholeBlocks; j++)
 		{
-			inodes[i] = new Inode(file, offset);
-			offset = offset + length;
+			buffer = file.read((2048)+(32*(j))+8, 4);
+			ByteBuffer inodeTablePointer = ByteBuffer.wrap(buffer);
+			inodeTablePointer.order(ByteOrder.LITTLE_ENDIAN);
+			offset = (inodeTablePointer.getInt()*1024);
+			
+			System.out.println("Inode Pointer: " + offset);
+			
+			for(int i = inodesPerGroup*j; i < inodesPerGroup*(j+1);  i++)
+			{
+				inodes[i] = new Inode(file, offset);
+				offset = offset + inodeLength;
+			}
+		}
+		
+		if(remainder>0)
+		{
+			buffer = file.read((2048)+(32*(j))+8, 4);
+			ByteBuffer inodeTablePointer = ByteBuffer.wrap(buffer);
+			inodeTablePointer.order(ByteOrder.LITTLE_ENDIAN);
+			offset = inodeTablePointer.getInt();
+			
+			for(int i = 0; i < remainder;  i++)
+			{
+				inodes[i] = new Inode(file, offset);
+				offset = offset + inodeLength;
+			}
 		}
 		
 		

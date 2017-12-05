@@ -46,6 +46,11 @@ public class Directory
 			info[i].printFileName();
 		}
 		
+		for (int i=0; i<info.length; i++)
+		{
+			info[i].printFileInfo();
+		}
+		
 		System.out.println("------------------------------------------------------------------");
 		
 	}
