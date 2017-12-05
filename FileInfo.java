@@ -29,12 +29,14 @@ public class FileInfo
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
 		length = byteBuff.getInt();
 		
+		paddedArray = new byte[]{0,0,0,0};
 		buffer = file.read(offset+6, 1);
 		System.arraycopy(buffer, 0, paddedArray, 0, 1);
 		byteBuff = ByteBuffer.wrap(paddedArray);
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
 		nameLength = byteBuff.getInt();
 		
+		paddedArray = new byte[]{0,0,0,0};
 		buffer = file.read(offset+7, 1);
 		System.arraycopy(buffer, 0, paddedArray, 0, 1);
 		byteBuff = ByteBuffer.wrap(paddedArray);

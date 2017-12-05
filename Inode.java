@@ -66,6 +66,7 @@ public class Inode
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
 		fileMode = byteBuff.getInt();
 		
+		paddedArray = new byte[]{0,0,0,0};
 		buffer = file.read(offset+2, 2);
 		System.arraycopy(buffer, 0, paddedArray, 0, 2);
 		byteBuff = ByteBuffer.wrap(paddedArray);
@@ -97,12 +98,14 @@ public class Inode
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
 		deletedTime = byteBuff.getInt();
 		
+		paddedArray = new byte[]{0,0,0,0};
 		buffer = file.read(offset+24, 2);
 		System.arraycopy(buffer, 0, paddedArray, 0, 2);
 		byteBuff = ByteBuffer.wrap(paddedArray);
 		byteBuff.order(ByteOrder.LITTLE_ENDIAN);
 		groupID = byteBuff.getInt();
 		
+		paddedArray = new byte[]{0,0,0,0};
 		buffer = file.read(offset+26, 2);
 		System.arraycopy(buffer, 0, paddedArray, 0, 2);
 		byteBuff = ByteBuffer.wrap(paddedArray);
@@ -139,7 +142,7 @@ public class Inode
 		fileSizeUpper = byteBuff.getInt();
 		
 		//Calculate the file size by combing the lower and upper values
-		fileSize = (fileSizeLower) + (fileSizeUpper << 32);
+		fileSize = (fileSizeLower) | (fileSizeUpper << 32);
 
 	}
 	

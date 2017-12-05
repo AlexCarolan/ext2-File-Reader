@@ -40,8 +40,6 @@ public class InodeTable
 			inodeTablePointer.order(ByteOrder.LITTLE_ENDIAN);
 			offset = (inodeTablePointer.getInt()*1024);
 			
-			System.out.println("Inode Pointer: " + offset);
-			
 			for(int i = inodesPerGroup*j; i < inodesPerGroup*(j+1);  i++)
 			{
 				inodes[i] = new Inode(file, offset);

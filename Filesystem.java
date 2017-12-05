@@ -17,8 +17,10 @@ public class Filesystem
 			vol = new Volume(unixStr);
 		}
 		
+		//Create a new ext2 file and superblock from the file and an offset of the blocksize
 		Ext2File file = new Ext2File(vol);
 		SuperBlock superBlock = new SuperBlock(file, 1024);
+		System.out.println("------------------------------------------------------------------");
 		
 		
 		//Calaculate the start of the table and use it to create a new table and root directory
@@ -60,13 +62,22 @@ public class Filesystem
 						System.out.println("------------------------------------------------------------------");
 						directory = new Directory(file, inodeTable, (directoryEntries[i].getInode()));
 						directoryEntries = directory.getFileInfo();
+						i = 0;
 						break;
 					}
-					System.out.println("Input: " + input + " File Name: " + directoryEntries[i].getFileName() + " File Tuype: " + directoryEntries[i].getFileType());
+					System.out.println("Input: " + input + " File Name: " + directoryEntries[i].getFileName() + " File Type: " + directoryEntries[i].getFileType());
+				}
+				else if(input.equals("root"))
+				{
+					System.out.println("------------------------------------------------------------------");
+					directory = new Directory(file, inodeTable, 2);
+					directoryEntries = directory.getFileInfo();
+					i = 0;
+					break;
 				}
 			}
 			
-			if(i >= directoryEntries.length && !input.equals("exit"))
+			if(i >= directoryEntries.length && !input.equals("exit") && !input.equals("root"))
 			{
 				System.out.println("The specified file/directory could not be found");
 			}
