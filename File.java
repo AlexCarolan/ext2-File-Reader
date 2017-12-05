@@ -38,7 +38,7 @@ public class File
 	
 	public void printFile()
 	{
-		System.out.println(fileText);
+		System.out.print(fileText);
 	}
 
 }

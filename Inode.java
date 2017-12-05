@@ -1,5 +1,3 @@
-
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Date;
@@ -142,7 +140,7 @@ public class Inode
 		fileSizeUpper = byteBuff.getInt();
 		
 		//Calculate the file size by combing the lower and upper values
-		fileSize = (fileSizeLower) | (fileSizeUpper << 32);
+		fileSize = (((long)fileSizeUpper << 32)  | (fileSizeLower));
 
 	}
 	
@@ -229,7 +227,7 @@ public class Inode
 		}
 		
 		//Hard Links, User-ID, Group-ID
-		System.out.printf("%-2d %-5d %-5d %-10d", hardLinks, userID, groupID, fileSize);
+		System.out.printf("%-2d %-5d %-5d %-12d", hardLinks, userID, groupID, fileSize);
 		
 		long lastModifiedMillSec = (long)lastModifiedTime * 1000L;
 		Date lastModified = new Date(lastModifiedMillSec);
