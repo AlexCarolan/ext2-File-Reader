@@ -1,13 +1,15 @@
 # ext2-File-Reader
 A java program to read and interpret the contents of an ext2 filesystem
 
-# Commands
+## Commands
 
 exit - ends the program
 
 root - navigates back to the starting directory, useful for exiting deeply nested directories
 
-*NOTE* 
+## Limitations
+
+*PLEASE NOTE* 
 
 >This program assumes a blocksize of 1024 bytes
 >
