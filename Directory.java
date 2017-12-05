@@ -16,9 +16,8 @@ public class Directory
 		int dirSize = (int)inodes.getInodeLength(dirInode);
 		int offset = 0;
 		int totalPos = 0;
-		int i;
 		
-		for(i=0; i<12 && !(totalPos >= dirSize); i++)
+		for(int i=0; i<12 && !(totalPos >= dirSize); i++)
 		{
 			while(offset + (1024*i) < (1024*(i+1)))
 			{
@@ -32,8 +31,11 @@ public class Directory
 		
 		info = new FileInfo[directoryEntries.size()];
 		info = directoryEntries.toArray(info);
-		
-		for (i=0; i<info.length; i++)
+	}
+	
+	public void printDirectory()
+	{
+		for (int i=0; i<info.length; i++)
 		{
 			if(info[i].getInode() > 0)
 			{
@@ -41,9 +43,7 @@ public class Directory
 				info[i].printFileName();
 			}
 		}
-		
 		System.out.println("------------------------------------------------------------------");
-		
 	}
 	
 	public FileInfo[] getFileInfo()

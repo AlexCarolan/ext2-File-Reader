@@ -26,6 +26,7 @@ public class Filesystem
 		//Calaculate the start of the table and use it to create a new table and root directory
 		InodeTable inodeTable = new InodeTable(file, superBlock);
 		Directory directory = new Directory(file, inodeTable, 2);
+		directory.printDirectory();
 		
 		//Access the inodes and directory entries from the root directory;
 		Inode[] inodes = inodeTable.getInodeTable();
@@ -35,7 +36,7 @@ public class Filesystem
 		//Navigate the file system
 		Scanner reader = new Scanner(System.in);
 		String input = new String();
-		File regularFile;
+		FileContent regularFile;
 		
 		int length;
 		int start;
@@ -80,7 +81,7 @@ public class Filesystem
 					if(directoryEntries[i].getFileType() == 1)
 					{
 						System.out.println("------------------------------------------------------------------");
-						regularFile = new File(file, inodes[(directoryEntries[i].getInode()-1)]);
+						regularFile = new FileContent(file, inodes[(directoryEntries[i].getInode()-1)]);
 						System.out.println("------------------------------------------------------------------");
 						check = true;
 						break;
@@ -89,6 +90,7 @@ public class Filesystem
 					{
 						System.out.println("------------------------------------------------------------------");
 						directory = new Directory(file, inodeTable, (directoryEntries[i].getInode()));
+						directory.printDirectory();
 						directoryEntries = directory.getFileInfo();
 						check = true;
 						break;
