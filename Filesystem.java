@@ -37,24 +37,52 @@ public class Filesystem
 		String input = new String();
 		File regularFile;
 		
-		//System.out.println("------------------------------------------------------------------\n");
-		//System.out.println("\n------------------------------------------------------------------");
-		int i;
+		int length;
+		int start;
+		boolean check;
+		byte[] buffer;
 		
 		while(!input.equals("exit"))
 		{
+			check = false;
 			System.out.print("Enter the name of the file or directory you wish to access or \"exit\" to quit: ");
 			input = reader.nextLine();
 			
-			for(i=0; i<directoryEntries.length; i++)
+			for(int i=0; i<directoryEntries.length; i++)
 			{
-				if(directoryEntries[i].getFileName().equals(input))
+
+				if(input.equals("root"))
+				{
+					System.out.println("------------------------------------------------------------------");
+					directory = new Directory(file, inodeTable, 2);
+					directoryEntries = directory.getFileInfo();
+					check = true;
+					break;
+				}
+				else if(input.equals("hexdump"))
+				{
+					System.out.print("Enter the byte you wish to start from: ");
+					start = reader.nextInt();
+					
+					System.out.print("Enter the number of bytes to dump: ");
+					length = reader.nextInt();
+					
+					buffer = file.read(start, length);
+					System.out.println("------------------------------------------------------------------");
+					helper.dumpHexBytes(buffer);
+					System.out.println("------------------------------------------------------------------");
+					reader.nextLine();
+					check = true;
+					break;
+				}
+				else if(directoryEntries[i].getFileName().equals(input))
 				{
 					if(directoryEntries[i].getFileType() == 1)
 					{
 						System.out.println("------------------------------------------------------------------");
 						regularFile = new File(file, inodes[(directoryEntries[i].getInode()-1)]);
 						System.out.println("------------------------------------------------------------------");
+						check = true;
 						break;
 					}
 					else if(directoryEntries[i].getFileType() == 2)
@@ -62,41 +90,19 @@ public class Filesystem
 						System.out.println("------------------------------------------------------------------");
 						directory = new Directory(file, inodeTable, (directoryEntries[i].getInode()));
 						directoryEntries = directory.getFileInfo();
-						i = 0;
+						check = true;
 						break;
 					}
-					System.out.println("Input: " + input + " File Name: " + directoryEntries[i].getFileName() + " File Type: " + directoryEntries[i].getFileType());
-				}
-				else if(input.equals("root"))
-				{
-					System.out.println("------------------------------------------------------------------");
-					directory = new Directory(file, inodeTable, 2);
-					directoryEntries = directory.getFileInfo();
-					i = 0;
-					break;
 				}
 			}
 			
-			if(i >= directoryEntries.length && !input.equals("exit") && !input.equals("root"))
+			if(check == false)
 			{
-				System.out.println("The specified file/directory could not be found");
+				System.out.println("The specified file, directory or command could not be found");
 			}
-			
 		}
 		
 		System.out.println("You have chosen to exit the filesystem reader, goodbye!");
-		
-		
-
-		
-		
-		
-		
-		
-		
-		
-
-		
 		
 	}
 }
