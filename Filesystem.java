@@ -1,5 +1,3 @@
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.Scanner;
 public class Filesystem
 {
@@ -49,62 +47,63 @@ public class Filesystem
 			System.out.print("Enter the name of the file or directory you wish to access or \"exit\" to quit: ");
 			input = reader.nextLine();
 			
-			for(int i=0; i<directoryEntries.length; i++)
+			if(input.equals("root"))
 			{
-
-				if(input.equals("root"))
+				System.out.println("------------------------------------------------------------------");
+				directory = new Directory(file, inodeTable, 2);
+				directory.printDirectory();
+				directoryEntries = directory.getFileInfo();
+				check = true;
+			}
+			else if(input.equals("hexdump"))
+			{
+				System.out.print("Enter the byte you wish to start from: ");
+				start = reader.nextInt();
+		
+				System.out.print("Enter the number of bytes to dump: ");
+				length = reader.nextInt();
+				
+				buffer = file.read(start, length);
+				System.out.println("------------------------------------------------------------------");
+				helper.dumpHexBytes(buffer);
+				System.out.println("------------------------------------------------------------------");
+				reader.nextLine();
+				check = true;
+			}
+			else
+			{
+				for(int i=0; i<directoryEntries.length; i++)
 				{
-					System.out.println("------------------------------------------------------------------");
-					directory = new Directory(file, inodeTable, 2);
-					directoryEntries = directory.getFileInfo();
-					check = true;
-					break;
-				}
-				else if(input.equals("hexdump"))
-				{
-					System.out.print("Enter the byte you wish to start from: ");
-					start = reader.nextInt();
-					
-					System.out.print("Enter the number of bytes to dump: ");
-					length = reader.nextInt();
-					
-					buffer = file.read(start, length);
-					System.out.println("------------------------------------------------------------------");
-					helper.dumpHexBytes(buffer);
-					System.out.println("------------------------------------------------------------------");
-					reader.nextLine();
-					check = true;
-					break;
-				}
-				else if(directoryEntries[i].getFileName().equals(input))
-				{
-					if(directoryEntries[i].getFileType() == 1)
+					if(directoryEntries[i].getFileName().equals(input))
 					{
-						System.out.println("------------------------------------------------------------------");
-						regularFile = new FileContent(file, inodes[(directoryEntries[i].getInode()-1)]);
-						System.out.println("------------------------------------------------------------------");
-						check = true;
-						break;
-					}
-					else if(directoryEntries[i].getFileType() == 2)
-					{
-						System.out.println("------------------------------------------------------------------");
-						directory = new Directory(file, inodeTable, (directoryEntries[i].getInode()));
-						directory.printDirectory();
-						directoryEntries = directory.getFileInfo();
-						check = true;
-						break;
+						if(directoryEntries[i].getFileType() == 1)
+						{
+							System.out.println("------------------------------------------------------------------");
+							regularFile = new FileContent(file, inodes[(directoryEntries[i].getInode()-1)]);
+							System.out.println("------------------------------------------------------------------");
+							check = true;
+							break;
+						}
+						else if(directoryEntries[i].getFileType() == 2)
+						{
+							System.out.println("------------------------------------------------------------------");
+							directory = new Directory(file, inodeTable, (directoryEntries[i].getInode()));
+							directory.printDirectory();
+							directoryEntries = directory.getFileInfo();
+							check = true;
+							break;
+						}
 					}
 				}
 			}
 			
-			if(check == false)
+			if(check == false && !input.equals("exit"))
 			{
 				System.out.println("The specified file, directory or command could not be found");
 			}
 		}
 		
-		System.out.println("You have chosen to exit the filesystem reader, goodbye!");
+		System.out.println("\n  --- You have chosen to exit the filesystem reader, goodbye! ---");
 		
 	}
 }
