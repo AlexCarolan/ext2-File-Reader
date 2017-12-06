@@ -20,7 +20,7 @@ public class Filesystem
 		Ext2File file = new Ext2File(vol);
 		SuperBlock superBlock = new SuperBlock(file, 1024);
 		
-		//Calaculate the start of the table and use it to create a new table and root directory
+		//create a new inode table and root directory
 		InodeTable inodeTable = new InodeTable(file, superBlock);
 		Directory directory = new Directory(file, inodeTable, 2);
 		System.out.println("---------------------------------------------------------------------------------------------------------");
@@ -32,8 +32,7 @@ public class Filesystem
 		Inode[] inodes = inodeTable.getInodeTable();
 		FileInfo[] directoryEntries = directory.getFileInfo();
 		
-		
-		//Navigate the file system
+		//Configure variables needed for navigation
 		Helper helper = new Helper();
 		Scanner reader = new Scanner(System.in);
 		String input = new String();
@@ -47,6 +46,8 @@ public class Filesystem
 		int start;
 		boolean check;
 		byte[] buffer;
+		
+		//Navigate & read the file system
 		
 		while(!input.equals("/exit")) //Exit command (ends program)
 		{
@@ -146,7 +147,6 @@ public class Filesystem
 							}
 						}
 					}
-
 				}
 			}
 			
