@@ -19,7 +19,7 @@ public class Filesystem
 		//Create a new ext2 file and superblock from the file and an offset of the blocksize
 		Ext2File file = new Ext2File(vol);
 		SuperBlock superBlock = new SuperBlock(file, 1024);
-		System.out.println("------------------------------------------------------------------");
+		System.out.println("---------------------------------------------------------------------------------------------------------");
 		
 		
 		//Calaculate the start of the table and use it to create a new table and root directory
@@ -56,7 +56,7 @@ public class Filesystem
 			
 			if(input.equals("/root")) //Root command (returns to starting directory)
 			{
-				System.out.println("------------------------------------------------------------------");
+				System.out.println("---------------------------------------------------------------------------------------------------------");
 				directory = new Directory(file, inodeTable, 2);
 				directory.printDirectory();
 				directoryEntries = directory.getFileInfo();
@@ -64,16 +64,24 @@ public class Filesystem
 			}
 			else if(input.equals("/hexdump")) //hexdump command (outputs a byte array in a readable format)
 			{
-				System.out.print("Enter the byte you wish to start from: ");
-				start = reader.nextInt();
-		
-				System.out.print("Enter the number of bytes to dump: ");
-				length = reader.nextInt();
-				
-				buffer = file.read(start, length);
-				System.out.println("------------------------------------------------------------------");
-				helper.dumpHexBytes(buffer);
-				System.out.println("------------------------------------------------------------------");
+				try
+				{
+					System.out.print("Enter the byte you wish to start from: ");
+					start = reader.nextInt();
+			
+					System.out.print("Enter the number of bytes to dump: ");
+					length = reader.nextInt();
+					
+					buffer = file.read(start, length);
+					System.out.println("---------------------------------------------------------------------------------------------------------");
+					helper.dumpHexBytes(buffer);
+				}
+				catch(Exception e)
+				{
+					System.out.println("---------------------------------------------------------------------------------------------------------");
+					System.out.println("Invalid input for hexdump");
+				}
+				System.out.println("---------------------------------------------------------------------------------------------------------");
 				reader.nextLine();
 				check = true;
 			}
@@ -101,9 +109,9 @@ public class Filesystem
 						{
 							if(directoryEntries[j].getFileType() == 1 && i == 0) //Access a regular file
 							{
-								System.out.println("------------------------------------------------------------------");
+								System.out.println("---------------------------------------------------------------------------------------------------------");
 								regularFile = new FileContent(file, inodes[(directoryEntries[j].getInode()-1)]);
-								System.out.println("------------------------------------------------------------------");
+								System.out.println("---------------------------------------------------------------------------------------------------------");
 								directory = startDirectory;
 								directoryEntries = directory.getFileInfo();
 								check = true;
@@ -117,7 +125,7 @@ public class Filesystem
 							}
 							else if(directoryEntries[j].getFileType() == 2 && i == 0) //Access a directory (at end of file path)
 							{
-								System.out.println("------------------------------------------------------------------");
+								System.out.println("---------------------------------------------------------------------------------------------------------");
 								directory = new Directory(file, inodeTable, (directoryEntries[j].getInode()));
 								directoryEntries = directory.getFileInfo();
 								directory.printDirectory();
