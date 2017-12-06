@@ -259,13 +259,19 @@ public class Inode
 		return fileSize;
 	}
 	
-	public void printBlockPointers()
+	public int getIndirectPointer()
 	{
-		for(int i=0; i<12; i++)
-		{
-			System.out.println(blockPointers[i]);
-		}
-		
+		return indirectPointer;
+	}
+	
+	public int getDoubleIndirectPointer()
+	{
+		return doubleIndirectPointer;
+	}
+	
+	public int getTripleIndirectPointer()
+	{
+		return tripleIndirectPointer;
 	}
 
 }
