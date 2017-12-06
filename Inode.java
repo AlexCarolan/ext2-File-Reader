@@ -221,13 +221,13 @@ public class Inode
 		
 		if((fileMode & 0x0001) == 0x0001)
 		{
-			System.out.print("x\t");
+			System.out.print("x    ");
 		}else{
-			System.out.print("-\t");
+			System.out.print("-    ");
 		}
 		
 		//Hard Links, User-ID, Group-ID
-		System.out.printf("%-2d %-5d %-5d %-12d", hardLinks, userID, groupID, fileSize);
+		System.out.printf("%-4d %-5d %-5d %-12d", hardLinks, userID, groupID, fileSize);
 		
 		long lastModifiedMillSec = (long)lastModifiedTime * 1000L;
 		Date lastModified = new Date(lastModifiedMillSec);

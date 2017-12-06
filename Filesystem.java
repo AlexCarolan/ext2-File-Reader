@@ -19,12 +19,13 @@ public class Filesystem
 		//Create a new ext2 file and superblock from the file and an offset of the blocksize
 		Ext2File file = new Ext2File(vol);
 		SuperBlock superBlock = new SuperBlock(file, 1024);
-		System.out.println("---------------------------------------------------------------------------------------------------------");
-		
 		
 		//Calaculate the start of the table and use it to create a new table and root directory
 		InodeTable inodeTable = new InodeTable(file, superBlock);
 		Directory directory = new Directory(file, inodeTable, 2);
+		System.out.println("---------------------------------------------------------------------------------------------------------");
+		System.out.printf("%-13s %-4s %-5s %-5s %-11s %-22s %s\n", "PERMISSIONS", "H-L", "U-ID", "G-ID", "SIZE", "LAST MODIFIED", "NAME");
+		System.out.println("---------------------------------------------------------------------------------------------------------");
 		directory.printDirectory();
 		
 		//Access the inodes and directory entries from the root directory;
@@ -56,8 +57,10 @@ public class Filesystem
 			
 			if(input.equals("/root")) //Root command (returns to starting directory)
 			{
-				System.out.println("---------------------------------------------------------------------------------------------------------");
 				directory = new Directory(file, inodeTable, 2);
+				System.out.println("---------------------------------------------------------------------------------------------------------");
+				System.out.printf("%-13s %-4s %-5s %-5s %-11s %-22s %s\n", "PERMISSIONS", "H-L", "U-ID", "G-ID", "SIZE", "LAST MODIFIED", "NAME");
+				System.out.println("---------------------------------------------------------------------------------------------------------");
 				directory.printDirectory();
 				directoryEntries = directory.getFileInfo();
 				check = true;
@@ -125,6 +128,8 @@ public class Filesystem
 							}
 							else if(directoryEntries[j].getFileType() == 2 && i == 0) //Access a directory (at end of file path)
 							{
+								System.out.println("---------------------------------------------------------------------------------------------------------");
+								System.out.printf("%-13s %-4s %-5s %-5s %-11s %-22s %s\n", "PERMISSIONS", "H-L", "U-ID", "G-ID", "SIZE", "LAST MODIFIED", "NAME");
 								System.out.println("---------------------------------------------------------------------------------------------------------");
 								directory = new Directory(file, inodeTable, (directoryEntries[j].getInode()));
 								directoryEntries = directory.getFileInfo();
