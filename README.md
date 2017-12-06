@@ -2,6 +2,7 @@
 A java program to read and interpret the contents of an ext2 filesystem
 
 ## Commands
+/help - displays all available commands
 
 /exit - ends the program
 
