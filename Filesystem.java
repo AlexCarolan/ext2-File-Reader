@@ -1,12 +1,13 @@
 import java.util.Scanner;
+import java.io.File;
+import java.util.ArrayList;
 public class Filesystem
 {
 	public static void main(String[] args)
 	{
-		String winStr = "H:\\Computer Science\\Second Year\\SCC.211 Operating Systems\\Week 5 - 10\\files\\ext2fs";
-		String unixStr = "/home/lancs/carolana/hdrive/Computer Science/Second Year/SCC.211 Operating Systems/Week 5 - 10/repo/ext2-File-Reader/files/ext2fs";
-
-		Helper helper = new Helper();
+		//Select the correct filepath based on the OS
+		String winStr = "files\\ext2fs";
+		String unixStr = "files/ext2fs";
 		Volume vol;
 		
 		if (System.getProperty("os.name").startsWith("Windows")) {
@@ -32,22 +33,28 @@ public class Filesystem
 		
 		
 		//Navigate the file system
+		Helper helper = new Helper();
 		Scanner reader = new Scanner(System.in);
 		String input = new String();
+		String[] path;
 		FileContent regularFile;
+		File filePath;
+		ArrayList<String> pathStrings;
+		Directory startDirectory;
 		
 		int length;
 		int start;
 		boolean check;
 		byte[] buffer;
 		
-		while(!input.equals("exit"))
+		while(!input.equals("/exit")) //Exit command (ends program)
 		{
 			check = false;
+			startDirectory = directory;
 			System.out.print("Enter the name of the file or directory you wish to access or \"exit\" to quit: ");
 			input = reader.nextLine();
 			
-			if(input.equals("root"))
+			if(input.equals("/root")) //Root command (returns to starting directory)
 			{
 				System.out.println("------------------------------------------------------------------");
 				directory = new Directory(file, inodeTable, 2);
@@ -55,7 +62,7 @@ public class Filesystem
 				directoryEntries = directory.getFileInfo();
 				check = true;
 			}
-			else if(input.equals("hexdump"))
+			else if(input.equals("/hexdump")) //hexdump command (outputs a byte array in a readable format)
 			{
 				System.out.print("Enter the byte you wish to start from: ");
 				start = reader.nextInt();
@@ -70,35 +77,63 @@ public class Filesystem
 				reader.nextLine();
 				check = true;
 			}
-			else
+			else //Navigate to a file or directory using the given filepath
 			{
-				for(int i=0; i<directoryEntries.length; i++)
+				filePath = new File(input);
+				pathStrings = new ArrayList<String>();
+				
+				while(filePath.getParent() !=null)
 				{
-					if(directoryEntries[i].getFileName().equals(input))
+					pathStrings.add(filePath.getName());
+					filePath = new File(filePath.getParent());
+				}
+				
+				pathStrings.add(filePath.getName());
+				path = new String[pathStrings.size()];
+				path = pathStrings.toArray(path);
+				
+				for(int i = (path.length-1); i>=0; i--)
+				{
+					
+					for(int j=0; j<directoryEntries.length; j++)
 					{
-						if(directoryEntries[i].getFileType() == 1)
+						if(directoryEntries[j].getFileName().equals(path[i]))
 						{
-							System.out.println("------------------------------------------------------------------");
-							regularFile = new FileContent(file, inodes[(directoryEntries[i].getInode()-1)]);
-							System.out.println("------------------------------------------------------------------");
-							check = true;
-							break;
-						}
-						else if(directoryEntries[i].getFileType() == 2)
-						{
-							System.out.println("------------------------------------------------------------------");
-							directory = new Directory(file, inodeTable, (directoryEntries[i].getInode()));
-							directory.printDirectory();
-							directoryEntries = directory.getFileInfo();
-							check = true;
-							break;
+							if(directoryEntries[j].getFileType() == 1 && i == 0) //Access a regular file
+							{
+								System.out.println("------------------------------------------------------------------");
+								regularFile = new FileContent(file, inodes[(directoryEntries[j].getInode()-1)]);
+								System.out.println("------------------------------------------------------------------");
+								directory = startDirectory;
+								directoryEntries = directory.getFileInfo();
+								check = true;
+								break;
+							}
+							else if(directoryEntries[j].getFileType() == 2 && i > 0) //Access a directory (not at the end of the file path)
+							{
+								directory = new Directory(file, inodeTable, (directoryEntries[j].getInode()));
+								directoryEntries = directory.getFileInfo();
+								break;
+							}
+							else if(directoryEntries[j].getFileType() == 2 && i == 0) //Access a directory (at end of file path)
+							{
+								System.out.println("------------------------------------------------------------------");
+								directory = new Directory(file, inodeTable, (directoryEntries[j].getInode()));
+								directoryEntries = directory.getFileInfo();
+								directory.printDirectory();
+								check = true;
+								break;
+							}
 						}
 					}
+
 				}
 			}
 			
-			if(check == false && !input.equals("exit"))
+			if(check == false && !input.equals("/exit"))
 			{
+				directory = startDirectory;
+				directoryEntries = directory.getFileInfo();
 				System.out.println("The specified file, directory or command could not be found");
 			}
 		}
