@@ -52,7 +52,7 @@ public class Filesystem
 		{
 			check = false;
 			startDirectory = directory;
-			System.out.print("Enter the name of the file or directory you wish to access or \"exit\" to quit: ");
+			System.out.print("Enter the name of the file or directory you wish to access or /help for commands: ");
 			input = reader.nextLine();
 			
 			if(input.equals("/root")) //Root command (returns to starting directory)
@@ -63,6 +63,13 @@ public class Filesystem
 				System.out.println("---------------------------------------------------------------------------------------------------------");
 				directory.printDirectory();
 				directoryEntries = directory.getFileInfo();
+				check = true;
+			}
+			else if(input.equals("/help")) //Root command (returns to starting directory)
+			{
+				System.out.println("---------------------------------------------------------------------------------------------------------");
+				System.out.print("\tAvalible Commands:\n\n\t/exit - ends the program\n\t/root - returns to the root directory\n\t/hexdump - asks for a start byte and length then outputs those bytes from the file\n");
+				System.out.println("---------------------------------------------------------------------------------------------------------");
 				check = true;
 			}
 			else if(input.equals("/hexdump")) //hexdump command (outputs a byte array in a readable format)
@@ -143,7 +150,7 @@ public class Filesystem
 				}
 			}
 			
-			if(check == false && !input.equals("/exit"))
+			if(check == false && !input.equals("/exit"))//If access failed or was not a valid command 
 			{
 				directory = startDirectory;
 				directoryEntries = directory.getFileInfo();
