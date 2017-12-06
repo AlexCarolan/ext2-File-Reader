@@ -43,7 +43,7 @@ public class Directory
 				info[i].printFileName();
 			}
 		}
-		System.out.println("------------------------------------------------------------------");
+		System.out.println("---------------------------------------------------------------------------------------------------------");
 	}
 	
 	public FileInfo[] getFileInfo()

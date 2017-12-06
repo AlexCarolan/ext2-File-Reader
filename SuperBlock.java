@@ -63,7 +63,7 @@ public class SuperBlock
 	*/
 	public void printSuperBlock()
 	{	
-		System.out.println("------------------ SuperBlock: " + name + " ------------------");
+		System.out.println("------------------------------------- SuperBlock: " + name + " ---------------------------------------");
 		System.out.println("Total Number of Inodes: " + inodes);
 		System.out.println("Total Number of Inodes per Group: " + inodesPerGroup);
 		System.out.println("Total Number of Blocks: " + blocks);
@@ -105,5 +105,6 @@ public class SuperBlock
 	{
 		return (blocksPerGroup);
 	}
+	
 	
 }
