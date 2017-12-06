@@ -69,7 +69,7 @@ public class Filesystem
 			else if(input.equals("/help")) //Root command (returns to starting directory)
 			{
 				System.out.println("---------------------------------------------------------------------------------------------------------");
-				System.out.print("\tAvalible Commands:\n\n\t/exit - ends the program\n\t/root - returns to the root directory\n\t/hexdump - asks for a start byte and length then outputs those bytes from the file\n");
+				System.out.print("\tAvailable Commands:\n\n\t/exit - ends the program\n\t/root - returns to the root directory\n\t/hexdump - asks for a start byte and length then outputs those bytes from the file\n");
 				System.out.println("---------------------------------------------------------------------------------------------------------");
 				check = true;
 			}
@@ -122,7 +122,7 @@ public class Filesystem
 							{
 								System.out.println("---------------------------------------------------------------------------------------------------------");
 								regularFile = new FileContent(file, inodes[(directoryEntries[j].getInode()-1)]);
-								System.out.println("---------------------------------------------------------------------------------------------------------");
+								System.out.println("\n---------------------------------------------------------------------------------------------------------");
 								directory = startDirectory;
 								directoryEntries = directory.getFileInfo();
 								check = true;
