@@ -3,11 +3,11 @@ A java program to read and interpret the contents of an ext2 filesystem
 
 ## Commands
 
-exit - ends the program
+/exit - ends the program
 
-root - navigates back to the starting directory, useful for exiting deeply nested directories
+/root - navigates back to the starting directory, useful for exiting deeply nested directories
 
-hexdump - asks for a starting position and length, outputs an array of bytes in hexadecimal format as well as the corresponding set of character if possible (used for de-bugging)
+/hexdump - asks for a starting position and length, outputs an array of bytes in hexadecimal format as well as the corresponding set of character if possible (used for de-bugging)
 
 ## Limitations
 
