@@ -1,10 +1,21 @@
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.lang.StringBuilder;
+
+/**
+* This class holds the text content of a file in the fileystem
+*/
 public class FileContent
 {
 	private String fileText = "";
 	
+	/**
+	* Creates a new Inode from the specified position (offset).
+	* Inode data is broken down byte by byte and seperated into individual values.
+	* 
+	* @param file The Ext2 Filesystem.
+	* @param inode The inode belonging to the file.
+	*/
 	public FileContent(Ext2File file, Inode inode)
 	{
 		ByteBuffer byteBuff;
@@ -35,6 +46,7 @@ public class FileContent
 			return;
 		}
 		
+		//Acess the indirect pointers
 		int[] indirectPointers = new int[256];
 		for(int x=0; x <256; x++)
 		{
@@ -61,6 +73,7 @@ public class FileContent
 			return;
 		}
 		
+		//Acess the double-indirect pointers
 		int[] doubleIndirectPointers = new int[65536];
 		int pointer;
 		for(int x=0; x <256; x++)
@@ -87,7 +100,7 @@ public class FileContent
 			blocksRemaining--;
 		}
 		
-		//Get any remainder from the indirect blocks
+		//Get any remainder from the double-indirect blocks
 		if(blocksRemaining == 0 && i <65536 && remainder > 0)
 		{
 			buffer = file.read((doubleIndirectPointers[i]*1024), remainder);
@@ -96,6 +109,7 @@ public class FileContent
 			return;
 		}
 		
+		//Acess the triple-indirect pointers
 		int[] tripleIndirectPointers = new int[16777216];
 		int secondPointer;
 		for(int x=0; x <256; x++)
@@ -121,6 +135,7 @@ public class FileContent
 			}
 		}
 		
+		//Read from the 16777216 triple-indirect blocks
 		for(i=0; i<16777216 && blocksRemaining>0; i++)
 		{
 			buffer = file.read(((tripleIndirectPointers[i]*1024)), 1024);
@@ -128,7 +143,7 @@ public class FileContent
 			blocksRemaining--;
 		}
 	
-		//Get any remainder from the indirect blocks
+		//Get any remainder from the triple-indirect blocks
 		if(blocksRemaining == 0 && i <16777216 && remainder > 0)
 		{
 			buffer = file.read((tripleIndirectPointers[i]*1024), remainder);
@@ -141,6 +156,9 @@ public class FileContent
 		
 	}
 	
+	/**
+	* Prints out the content of the file.
+	*/
 	public void printFile()
 	{
 		System.out.print(fileText);

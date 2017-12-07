@@ -8,10 +8,6 @@ import java.util.HashMap;
 */
 public class Inode
 {
-	private Ext2File file;
-	private int offset;
-	private ByteBuffer byteBuff;
-	private byte padding = 0x00;
 	private int fileMode;
 	private int userID;
 	private int fileSizeLower;
@@ -28,19 +24,18 @@ public class Inode
 	private int fileSizeUpper;
 	private long fileSize;
 	private HashMap<Integer, String> monthMap = new HashMap<Integer, String>();
-
 	
 	/**
 	* Creates a new Inode from the specified position (offset).
 	* Inode data is broken down byte by byte and seperated into individual values.
 	* 
-	* @param f The Ext2 Filesystem.
-	* @param o The position (in bytes) at which the inode table begins in the filesystem.
+	* @param file The Ext2 Filesystem.
+	* @param offset The position (in bytes) at which the inode table begins in the filesystem.
 	*/
-	public Inode (Ext2File f, int o)
+	public Inode (Ext2File file, int offset)
 	{
-		file = f;
-		offset = o;
+		
+		ByteBuffer byteBuff;
 		
 		//Initialize the hashmap for integers(0-11) -> months
 		monthMap.put(0, "January");
