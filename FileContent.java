@@ -1,19 +1,18 @@
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.lang.StringBuilder;
 public class FileContent
 {
-	private Ext2File file;
-	private String fileText;
-	private byte[] buffer;
+	private String fileText = "";
 	
-	public FileContent(Ext2File f, Inode inode)
+	public FileContent(Ext2File file, Inode inode)
 	{
-		file = f;
 		ByteBuffer byteBuff;
 		int i = 0;
 		long fileSize = inode.getLength();
 		long blocksRemaining =  fileSize/1024;
 		long remainder = fileSize%1024;
+		byte[] buffer;
 		
 		int indirectPointer = inode.getIndirectPointer();
 		int doubleIndirectPointer = inode.getDoubleIndirectPointer();
@@ -25,8 +24,7 @@ public class FileContent
 			buffer = file.read(((inode.getBlockPointer(i)*1024)), 1024);
 			byteBuff = ByteBuffer.wrap(buffer);
 			byteBuff.order(ByteOrder.LITTLE_ENDIAN);
-			fileText = new String(byteBuff.array());
-			this.printFile();
+			fileText = fileText + (new String(byteBuff.array())).trim();
 			blocksRemaining--;
 		}
 		
@@ -36,7 +34,7 @@ public class FileContent
 			buffer = file.read((inode.getBlockPointer(i)*1024), remainder);
 			byteBuff = ByteBuffer.wrap(buffer);
 			byteBuff.order(ByteOrder.LITTLE_ENDIAN);
-			fileText = new String(byteBuff.array());
+			fileText = fileText + (new String(byteBuff.array())).trim();
 			this.printFile();
 			return;
 		}
@@ -56,8 +54,7 @@ public class FileContent
 			buffer = file.read(((indirectPointers[i]*1024)), 1024);
 			byteBuff = ByteBuffer.wrap(buffer);
 			byteBuff.order(ByteOrder.LITTLE_ENDIAN);
-			fileText = new String(byteBuff.array());
-			this.printFile();
+			fileText = fileText + (new String(byteBuff.array())).trim();
 			blocksRemaining--;
 		}
 		
@@ -67,13 +64,13 @@ public class FileContent
 			buffer = file.read((indirectPointers[i]*1024), remainder);
 			byteBuff = ByteBuffer.wrap(buffer);
 			byteBuff.order(ByteOrder.LITTLE_ENDIAN);
-			fileText = new String(byteBuff.array());
+			fileText = fileText + (new String(byteBuff.array())).trim();
 			this.printFile();
 			return;
 		}
 		
 		int[] doubleIndirectPointers = new int[65536];
-		int pointer = 0;
+		int pointer;
 		for(int x=0; x <256; x++)
 		{
 			buffer = file.read((doubleIndirectPointer*1024)+(x*4), 4);
@@ -96,8 +93,7 @@ public class FileContent
 			buffer = file.read(((doubleIndirectPointers[i]*1024)), 1024);
 			byteBuff = ByteBuffer.wrap(buffer);
 			byteBuff.order(ByteOrder.LITTLE_ENDIAN);
-			fileText = new String(byteBuff.array());
-			this.printFile();
+			fileText = fileText + (new String(byteBuff.array())).trim();
 			blocksRemaining--;
 		}
 		
@@ -107,19 +103,63 @@ public class FileContent
 			buffer = file.read((doubleIndirectPointers[i]*1024), remainder);
 			byteBuff = ByteBuffer.wrap(buffer);
 			byteBuff.order(ByteOrder.LITTLE_ENDIAN);
-			fileText = new String(byteBuff.array());
+			fileText = fileText + (new String(byteBuff.array())).trim();
 			this.printFile();
 			return;
 		}
 		
+		int[] tripleIndirectPointers = new int[16777216];
+		int secondPointer;
+		for(int x=0; x <256; x++)
+		{
+			buffer = file.read((tripleIndirectPointer*1024)+(x*4), 4);
+			byteBuff = ByteBuffer.wrap(buffer);
+			byteBuff.order(ByteOrder.LITTLE_ENDIAN);
+			pointer = byteBuff.getInt();
+			
+			for(int y=0; y <256; y++)
+			{
+			buffer = file.read((pointer*1024)+(y*4), 4);
+			byteBuff = ByteBuffer.wrap(buffer);
+			byteBuff.order(ByteOrder.LITTLE_ENDIAN);
+			secondPointer = byteBuff.getInt();
+				for(int z=0; z <256; z++)
+				{
+				buffer = file.read((secondPointer*1024)+(z*4), 4);
+				byteBuff = ByteBuffer.wrap(buffer);
+				byteBuff.order(ByteOrder.LITTLE_ENDIAN);
+				tripleIndirectPointers[z+(y*256)+(x*65536)] = byteBuff.getInt();
+				}
+			}
+		}
 		
-
+		for(i=0; i<16777216 && blocksRemaining>0; i++)
+		{
+			buffer = file.read(((tripleIndirectPointers[i]*1024)), 1024);
+			byteBuff = ByteBuffer.wrap(buffer);
+			byteBuff.order(ByteOrder.LITTLE_ENDIAN);
+			fileText = fileText + (new String(byteBuff.array())).trim();
+			blocksRemaining--;
+		}
+	
+		//Get any remainder from the indirect blocks
+		if(blocksRemaining == 0 && i <16777216 && remainder > 0)
+		{
+			buffer = file.read((tripleIndirectPointers[i]*1024), remainder);
+			byteBuff = ByteBuffer.wrap(buffer);
+			byteBuff.order(ByteOrder.LITTLE_ENDIAN);
+			fileText = fileText + (new String(byteBuff.array())).trim();
+			this.printFile();
+			return;
+		}
+		
+		this.printFile();
 		
 	}
 	
 	public void printFile()
 	{
-		System.out.print(fileText.trim());
+		System.out.print(fileText);
 	}
 
 }
