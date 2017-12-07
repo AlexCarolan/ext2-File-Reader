@@ -6,7 +6,7 @@ import java.io.RandomAccessFile;
 */
 public class Ext2File
 {
-	private Volume volume;
+	private final Volume volume;
 	private long curentPosition;
 	
 	/**

@@ -8,21 +8,21 @@ import java.util.HashMap;
 */
 public class Inode
 {
-	private int fileMode;
-	private int userID;
-	private int fileSizeLower;
-	private int lastAcessTime;
-	private int creationTime;
-	private int lastModifiedTime;
-	private int deletedTime;
-	private int groupID;
-	private int hardLinks;
-	private int[] blockPointers;
-	private int indirectPointer;
-	private int doubleIndirectPointer;
-	private int tripleIndirectPointer;
-	private int fileSizeUpper;
-	private long fileSize;
+	private final int fileMode;
+	private final int userID;
+	private final int fileSizeLower;
+	private final int lastAcessTime;
+	private final int creationTime;
+	private final int lastModifiedTime;
+	private final int deletedTime;
+	private final int groupID;
+	private final int hardLinks;
+	private final int[] blockPointers;
+	private final int indirectPointer;
+	private final int doubleIndirectPointer;
+	private final int tripleIndirectPointer;
+	private final int fileSizeUpper;
+	private final long fileSize;
 	private HashMap<Integer, String> monthMap = new HashMap<Integer, String>();
 	
 	/**

@@ -6,7 +6,7 @@ import java.nio.ByteOrder;
 */
 public class InodeTable
 {
-	private Ext2File file;
+	private final Ext2File file;
 	private Inode[] inodes;
 	
 	/**
@@ -20,6 +20,7 @@ public class InodeTable
 		file = f;
 		inodes = new Inode[superBlock.getNumberOfInodes()];
 		
+		//Obtain the relevent data using the superblock
 		int wholeBlocks = superBlock.getNumberOfInodes()/superBlock.getInodesPerGroup();
 		int remainder = superBlock.getNumberOfInodes()%superBlock.getInodesPerGroup();
 		int inodesPerGroup = superBlock.getInodesPerGroup();
@@ -29,10 +30,8 @@ public class InodeTable
 		int indodeBlock;
 		byte buffer[];
 		int offset;
-		
-		//Find the pointer for the inode table 
-		//Create an array of inodes
-		
+
+		//Populate the array of inodes using full groups
 		for(j=0; j<wholeBlocks; j++)
 		{
 			buffer = file.read((2048)+(32*(j))+8, 4);
@@ -47,6 +46,7 @@ public class InodeTable
 			}
 		}
 		
+		//add the remaining inodes from the last group
 		if(remainder>0)
 		{
 			buffer = file.read((2048)+(32*(j))+8, 4);
@@ -73,16 +73,33 @@ public class InodeTable
 		return inodes;
 	}
 	
+	/**
+	* Prints out the inode data of the inode at the given position.
+	* 
+	* @param inodeNum The number of the inode to be printed.
+	*/
 	public void printInode(int inodeNum)
 	{
 		inodes[inodeNum-1].printInode();
 	}
 	
+	/**
+	* Provides the file size of the file related to the provided inode number.
+	* 
+	* @param inodeNum The number of the inode.
+	*/
 	public long getInodeLength(int inodeNum)
 	{
 		return inodes[inodeNum-1].getLength();
 	}
 	
+	/**
+	* Provides a block pointer from the inodes 12 direct pointers.
+	* Valid block numbers are in the range of (0 - 11).
+	* 
+	* @param inodeNum The number of the inode.
+	* @param blockNum The number of the direct block.
+	*/
 	public int getInodeBlockPointer(int inodeNum, int blockNum)
 	{
 		return inodes[inodeNum-1].getBlockPointer(blockNum);

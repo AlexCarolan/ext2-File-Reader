@@ -7,20 +7,16 @@ import java.nio.ByteOrder;
 */
 public class SuperBlock
 {
-	private Ext2File file;
-	private ByteBuffer byteBuff;
-	private int offset;
-	private int inodes;
-	private int blocks;
-	private String name;
-	private int blocksPerGroup;
-	private int inodesPerGroup;
-	private int inodeSize;
+	private final int inodes;
+	private final int blocks;
+	private final String name;
+	private final int blocksPerGroup;
+	private final int inodesPerGroup;
+	private final int inodeSize;
 	
-	public SuperBlock(Ext2File f, int o)
+	public SuperBlock(Ext2File file, int offset)
 	{
-		file = f;
-		offset = o;
+		ByteBuffer byteBuff;
 		
 		//Seperate and store each value byte by byte
 		byte buffer[] = file.read(offset, 4);
@@ -84,7 +80,7 @@ public class SuperBlock
 	/**
 	* provides the total number of inodes.
 	* 
-	* @return The size in bytes of each inode.
+	* @return inodes The total number of inodes in the filesystem.
 	*/
 	public int getNumberOfInodes()
 	{
@@ -94,13 +90,18 @@ public class SuperBlock
 	/**
 	* provides the total number of inodes per group.
 	* 
-	* @return The size in bytes of each inode.
+	* @return inodesPerGroup The maximum number of inodes per group.
 	*/
 	public int getInodesPerGroup()
 	{
 		return (inodesPerGroup);
 	}
 	
+	/**
+	* provides the total number of blocks per group.
+	* 
+	* @return blocksPerGroup The number of blocks in each block group.
+	*/
 	public int getBlocksPerGroup()
 	{
 		return (blocksPerGroup);
