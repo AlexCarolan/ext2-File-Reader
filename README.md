@@ -19,3 +19,5 @@ A java program to read and interpret the contents of an ext2 filesystem
 >User & group IDs in directory entries cannot be mapped to a readable output as this is stored by the OS and not found directly within the filesystem, instead they are printed as their integer values
 >
 >Currently a maximum of 12288 bytes can be read from a directory, if this is exceeded only the first 12288 bytes will be read
+>
+>Files up to the maximum size for 1K blocks can be read, however files using triple-indirect pointers will take longer to read (about 35s vs almost instant)
