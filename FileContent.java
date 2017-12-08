@@ -112,7 +112,7 @@ public class FileContent
 		//Acess the triple-indirect pointers
 		int[] tripleIndirectPointers = new int[16777216];
 		int secondPointer;
-		for(int x=0; x <256; x++)
+		for(int x=0; x <256 && blocksRemaining>=(x*65536); x++)
 		{
 			buffer = file.read((tripleIndirectPointer*1024)+(x*4), 4);
 			byteBuff = ByteBuffer.wrap(buffer);
