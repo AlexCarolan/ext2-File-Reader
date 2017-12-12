@@ -1,6 +1,6 @@
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.lang.StringBuilder;
+import java.util.ArrayList;
 
 /**
 * This class holds the text content of a file in the fileystem
@@ -24,6 +24,8 @@ public class FileContent
 		long blocksRemaining =  fileSize/1024;
 		long remainder = fileSize%1024;
 		byte[] buffer;
+		
+		ArrayList<Integer> TrplIndPointers = new ArrayList<Integer>();
 		
 		int indirectPointer = inode.getIndirectPointer();
 		int doubleIndirectPointer = inode.getDoubleIndirectPointer();
@@ -110,7 +112,6 @@ public class FileContent
 		}
 		
 		//Acess the triple-indirect pointers
-		int[] tripleIndirectPointers = new int[16777216];
 		int secondPointer;
 		for(int x=0; x <256 && blocksRemaining>=(x*65536); x++)
 		{
@@ -130,13 +131,16 @@ public class FileContent
 				buffer = file.read((secondPointer*1024)+(z*4), 4);
 				byteBuff = ByteBuffer.wrap(buffer);
 				byteBuff.order(ByteOrder.LITTLE_ENDIAN);
-				tripleIndirectPointers[z+(y*256)+(x*65536)] = byteBuff.getInt();
+				TrplIndPointers.add(byteBuff.getInt());
 				}
 			}
 		}
 		
+		Integer[] tripleIndirectPointers = new Integer[TrplIndPointers.size()];
+		tripleIndirectPointers = TrplIndPointers.toArray(tripleIndirectPointers);
+		
 		//Read from the 16777216 triple-indirect blocks
-		for(i=0; i<16777216 && blocksRemaining>0; i++)
+		for(i=0; blocksRemaining>0; i++)
 		{
 			buffer = file.read(((tripleIndirectPointers[i]*1024)), 1024);
 			fileText = fileText + (new String(buffer)).trim();
@@ -144,7 +148,7 @@ public class FileContent
 		}
 	
 		//Get any remainder from the triple-indirect blocks
-		if(blocksRemaining == 0 && i <16777216 && remainder > 0)
+		if(remainder > 0)
 		{
 			buffer = file.read((tripleIndirectPointers[i]*1024), remainder);
 			fileText = fileText + (new String(buffer)).trim();

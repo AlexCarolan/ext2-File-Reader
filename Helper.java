@@ -76,7 +76,4 @@ public class Helper
 			offset = offset + 16;
 		}
 	}
-	
-	
-	
 }
