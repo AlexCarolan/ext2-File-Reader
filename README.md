@@ -22,4 +22,4 @@ A java program to read and interpret the contents of an ext2 filesystem
 >
 
 ## Demo
-![Game in action](Images/portfolio-3.gif)
+![Reader in action](Images/portfolio-3.gif)
