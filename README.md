@@ -21,3 +21,5 @@ A java program to read and interpret the contents of an ext2 filesystem
 >Currently a maximum of 12288 bytes can be read from a directory, if this is exceeded only the first 12288 bytes will be read
 >
 
+## Demo
+![Game in action](Images/portfolio-3.gif)
